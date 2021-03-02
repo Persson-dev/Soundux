@@ -1,3 +1,6 @@
+#if defined(__APPLE__)
+#define MACOS_IMPL
+#endif
 #include "webview.hpp"
 #include "../../../core/global/globals.hpp"
 #include "../../../helper/json/bindings.hpp"
