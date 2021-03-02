@@ -7,9 +7,12 @@
 #include <filesystem>
 #include <nlohmann/json.hpp>
 
-#ifdef _WIN32
+#if defined(_WIN32)
 #include <shellapi.h>
 #include <windows.h>
+#elif defined(__APPLE__)
+#include <limits.h>
+#include <mach-o/dyld.h>
 #endif
 
 namespace Soundux::Objects
@@ -17,14 +20,18 @@ namespace Soundux::Objects
     void WebView::setup()
     {
         Window::setup();
-#ifdef _WIN32
+#if defined(_WIN32)
         char rawPath[MAX_PATH];
         auto executablePath = GetModuleFileNameA(nullptr, rawPath, MAX_PATH);
 
         auto path = std::filesystem::canonical(rawPath).parent_path() / "dist" / "index.html";
-#endif
-#if defined(__linux__)
+#elif defined(__linux__)
         auto path = std::filesystem::canonical("/proc/self/exe").parent_path() / "dist" / "index.html";
+#elif defined(__APPLE__)
+        char buf[PATH_MAX];
+        uint32_t bufsize = PATH_MAX;
+        _NSGetExecutablePath(buf, &bufsize);
+        auto path = std::filesystem::canonical(buf).parent_path() / "dist" / "index.html";
 #endif
         webview = std::make_unique<wv::WebView>(Globals::gData.width, Globals::gData.height, true, "Soundux",
                                                 "file://" + path.string(), true,
