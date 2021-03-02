@@ -9,10 +9,10 @@ file(GLOB src
     "src/*/*/*/*/*.cpp"
 )
 
-if (WIN32)
-add_executable(soundux WIN32 ${src} "assets/icon.rc")
+if(WIN32)
+    add_executable(soundux WIN32 ${src} "assets/icon.rc")
 else()
-add_executable(soundux ${src})
+    add_executable(soundux ${src})
 endif()
 
 target_include_directories(soundux PRIVATE "lib/miniaudio")
@@ -24,13 +24,14 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(soundux PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
 
-if (UNIX)
-find_package(X11 REQUIRED)
-include_directories(${X11_INCLUDE_DIR})
-target_link_libraries(soundux PRIVATE ${X11_LIBRARIES} ${X11_Xinput_LIB})
-endif()
-if (WIN32)
-target_compile_definitions(soundux PRIVATE _CRT_SECURE_NO_WARNINGS=1 _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS=1 _UNICODE=1)
+if (APPLE)
+    #TODO
+elseif (UNIX)
+    find_package(X11 REQUIRED)
+    include_directories(${X11_INCLUDE_DIR})
+    target_link_libraries(soundux PRIVATE ${X11_LIBRARIES} ${X11_Xinput_LIB})
+elseif (WIN32)
+    target_compile_definitions(soundux PRIVATE _CRT_SECURE_NO_WARNINGS=1 _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS=1 _UNICODE=1)
 endif()
 
 add_subdirectory(src/ui/impl/webview/lib/webview EXCLUDE_FROM_ALL)
@@ -40,11 +41,11 @@ target_link_libraries(soundux PUBLIC webview nfd InstanceGuard)
 
 # [[ Build Frontend ]]
 if (MSVC)
-file(COPY "${CMAKE_SOURCE_DIR}/src/ui/impl/webview/lib/soundux-ui/" 
-    DESTINATION "${CMAKE_SOURCE_DIR}/build/Release/dist")
+    file(COPY "${CMAKE_SOURCE_DIR}/src/ui/impl/webview/lib/soundux-ui/" 
+        DESTINATION "${CMAKE_SOURCE_DIR}/build/Release/dist")
 else()
-file(COPY "${CMAKE_SOURCE_DIR}/src/ui/impl/webview/lib/soundux-ui/" 
-    DESTINATION "${CMAKE_SOURCE_DIR}/build/dist")
+    file(COPY "${CMAKE_SOURCE_DIR}/src/ui/impl/webview/lib/soundux-ui/" 
+        DESTINATION "${CMAKE_SOURCE_DIR}/build/dist")
 endif()
 
 target_compile_features(soundux PRIVATE cxx_std_17)
