@@ -11,8 +11,11 @@
 #include <core/objects/objects.hpp>
 #include <core/objects/settings.hpp>
 #include <guard.hpp>
+#include <helper/cli/cli.hpp>
 #include <helper/icons/icons.hpp>
 #include <helper/queue/queue.hpp>
+#include <helper/rest/client.hpp>
+#include <helper/rest/server.hpp>
 #include <helper/ytdl/youtube-dl.hpp>
 #include <memory>
 #include <ui/ui.hpp>
@@ -38,6 +41,10 @@ namespace Soundux
         inline std::unique_ptr<Objects::Window> gGui;
 
         inline std::shared_ptr<Instance::Guard> gGuard;
+
+        inline Objects::SounduxServer gServer;
+        inline Objects::SounduxClient gClient;
+        inline Objects::CommandLineInterface gCli;
 
         /* Allows for fast & easy sound access, is populated on start up */
         inline sxl::var_guard<std::map<std::uint32_t, std::reference_wrapper<Objects::Sound>>> gSounds;

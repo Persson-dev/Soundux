@@ -23,6 +23,8 @@ namespace Soundux
             int localVolume = 50;
             bool syncVolumes = false;
 
+            std::uint16_t serverPort = 26656;
+
             bool allowMultipleOutputs = false;
             bool useAsDefaultDevice = false;
             bool muteDuringPlayback = false;

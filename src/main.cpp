@@ -64,6 +64,10 @@ int main(int argc, char **arguments)
         gGuard.reset();
         gGuard = std::make_shared<Instance::Guard>("soundux-guard");
     }
+    else if (Soundux::Globals::gCli.parseProgramArguments(args))
+    {
+        return 0;
+    }
 
     if (gGuard->isAnotherRunning())
     {
@@ -91,6 +95,8 @@ int main(int argc, char **arguments)
         gAudioBackend->useAsDefault();
     }
 #endif
+
+    Soundux::Globals::gServer.start();
 
     gGui = std::make_unique<Soundux::Objects::WebView>();
     gGui->setup();
@@ -122,6 +128,8 @@ int main(int argc, char **arguments)
     gConfig.data.set(gData);
     gConfig.settings = gSettings;
     gConfig.save();
+
+    Soundux::Globals::gServer.stop();
 
     return 0;
 }
